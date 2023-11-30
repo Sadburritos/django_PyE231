@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_*lrn$lc3=#9$ghtmx4hhi!t!)_!h*j+45-dm0120gqgq@!@=q'
+SECRET_KEY = 'django-insecure-3xf9r318pm=l)tzm(mo^df+x5!p@g2j#lf*ag6n7a!r((lw7+z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bboard'
+
+    'bboard.apps.BboardConfig',  # 'bboard',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'samplesite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,11 +118,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_FILES_DIRS = [
-    BASE_DIR / "static"
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ABSOLUTE_URL_OVERRIDES = {
+    "bboard.rubric": lambda rec: f"/bboard/%s{rec.pk}/"
+}

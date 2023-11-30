@@ -1,37 +1,30 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% Block title %}Главная {Endblock} :: BB</title>
-    <link rel = "stylesheet" href="{}">
+    <title>{% block title %}Главная{% endblock %} :: Доска объявлений</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
+
+<header>
     <h1>Объявления</h1>
-    <div>
-        <a href="% url 'index' %">Главная</a>
-        {% for rubric in rubrics %}
-        <a href="{% url 'by_rubric' rubric.pk %}">{{ rubric.name }}</a>
-        {% endfor %}
-        <a href="{% url 'index' %}">Добавить</a>
-    </div>
-    {% for bb in bbs%}
-    <div>
-        <h2>{{ bb.title}}</h2>
-        <p>{{bb.content}}</p>
+</header>
 
-        <p>
-            <a href="{% url 'by_rubric' bb.rubric.pk %}">{{rubric.name }}</a>
-        </p>
-
-        <p>{{bb.published|date:"d.m.Y.H:i:s" }}</p>
-    </div>
+<nav>
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="{% url 'add' %}">Добавить</a>
+    {% for rubric in rubrics %}
+        <a href="{#% url 'by_rubric' rubric.pk %#}{{ rubric.get_absolute_url}}">{{ rubric.name }}</a>
     {% endfor %}
+</nav>
 
 <section>
-    {% block
-
+    {% block content %}
+    {% endblock %}
 </section>
-
 
 </body>
 </html>
