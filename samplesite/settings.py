@@ -127,6 +127,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ABSOLUTE_URL_OVERRIDES = {
-    "bboard.rubric": lambda rec: f"/bboard/%s{rec.pk}/"
-}
+# ABSOLUTE_URL_OVERRIDES = {
+#     # 'bboard.rubric': lambda rec: "/%s/" % rec.pk,
+#     'bboard.rubric': lambda rec: f"/{rec.pk}/",
+# }
