@@ -2,7 +2,6 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
 
-
 is_all_posts_passive = True
 
 
@@ -33,6 +32,7 @@ class MinMaxValueValidator:
 
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название', unique=True)
+
     # slug = models.SlugField(max_length=160, unique=True, verbose_name='Слаг')
 
     def __str__(self):
@@ -55,15 +55,16 @@ class Rubric(models.Model):
 
 class Bb(models.Model):
     KINDS = (
-        ('b', 'Куплю'),
-        ('s', 'Продам'),
-        ('c', 'Обменяю'),
+        ("b", "Куплю"),
+        ("s", "Продам"),
+        ("c", "обменяю")
     )
 
-    kind = models.CharField(max_length=1, choices=KINDS, default='s', verbose_name='Тип объявления')
+    kind = models.CharField(max_length=1, choices=KINDS, default="s", verbose_name="Тип объявления")
 
     rubric = models.ForeignKey("Rubric", null=True, on_delete=models.PROTECT,
                                verbose_name='Рубрика')
+
     title = models.CharField(
         max_length=50,
         verbose_name="Товар",
@@ -111,4 +112,3 @@ class Bb(models.Model):
         verbose_name_plural = 'Объявления'
         verbose_name = 'Объявление'
         ordering = ['-published', 'title']
-        # order_with_respect_to = 'rubric'

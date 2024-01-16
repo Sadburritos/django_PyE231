@@ -5,13 +5,15 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <h1>{{ title }}</h1>
-
-    {% for bb in bbs %}
+<h1>{{ title }}</h1>
+{% for bb in bbs %}
     <p>{{ bb }}</p>
+{% endfor %}
 
-    {% endfor %}
 
-    <h2>{{  res  }}</h2>
+<h2>{{ res }}</h2>
+<h3>{{ res.url_name }}</h3>
+<h3>{{ res.view_name }}</h3>
+
 </body>
 </html>
