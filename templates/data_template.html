@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>API Data</title>
+</head>
+<body>
+    <h1>Data from Fake API</h1>
+    <ul>
+        {% for item in data %}
+            <li>User ID: {{ item.userId }}, ID: {{ item.id }}, Title: {{ item.title }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
