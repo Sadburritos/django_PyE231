@@ -1,7 +1,7 @@
+from django.contrib.postgres.fields import DateTimeRangeField, ArrayField
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
-
 
 is_all_posts_passive = True
 
@@ -31,10 +31,38 @@ class MinMaxValueValidator:
             )
 
 
+class RubricQuerySet(models.QuerySet):
+    def order_by_bb_count(self):
+        return self.annotate(cnt=models.Count('bb')).order_by('-cnt')
+
+
+# Диспетчер записей
+class RubricManager(models.Manager):
+    def get_queryset(self):
+        # return super().get_queryset().order_by('-order', '-name')
+        return RubricQuerySet(self.model, using=self._db)
+
+    def order_by_bb_count(self):
+        # return super().get_queryset().annotate(
+        #     cnt=models.Count('bb')).order_by('-cnt')
+        return self.get_queryset().order_by_bb_count()
+
+
+class BbManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('price')
+
+
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True,
                             verbose_name='Название', unique=True)
     order = models.SmallIntegerField(default=0, db_index=True)
+    # objects = RubricManager()
+    # objects = models.Manager()
+    # bbs = RubricManager()
+
+    # objects = RubricQuerySet.as_manager()
+    objects = models.Manager.from_queryset(RubricQuerySet)()
 
     def __str__(self):
         return self.name
@@ -46,6 +74,12 @@ class Rubric(models.Model):
         verbose_name_plural = 'Рубрики'
         verbose_name = 'Рубрика'
         ordering = ['order', 'name']
+
+
+class RevRubric(Rubric):
+    class Meta:
+        proxy = True
+        ordering = ['-name']
 
 
 class Bb(models.Model):
@@ -83,6 +117,9 @@ class Bb(models.Model):
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")
     updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Изменено")
 
+    objects = models.Manager()
+    by_price = BbManager()
+
     def __str__(self):
         return f'{self.title}'
 
@@ -107,3 +144,14 @@ class Bb(models.Model):
         verbose_name = 'Объявление'
         ordering = ['-published', 'title']
         # order_with_respect_to = 'rubric'
+
+    class PGSRoomResiving(models.Model):
+        name = models.CharField(max_lenght=20, verbose_name="Помещение")
+        reserviing = DateTimeRangeField(verbose_name="Время резервирования")
+        cancelled = models.BooleanField(default=False, verbose_name="Отменить резервирование")
+
+
+class PGSRubric(models.Model):
+    name = models.CharField(max_length=20, verbose_name="имя")
+    description = models.TextField(verbose_name="Описание"),
+    taps = ArrayField(name_field=models.CharField(max_length=20), verbose_name="Теги")
